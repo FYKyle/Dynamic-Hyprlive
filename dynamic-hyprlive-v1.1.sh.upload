@@ -1,0 +1,92 @@
+#!/bin/bash
+#=== Dynamic-Hyprlive === 
+# FYKsKyle	05.20.2026
+# Dynamically sets mpvpaper and openrgb to match listed programs using default when nothing is running
+# Iteration limit controls the mpv memory leak
+#========================
+#--- set up --- 
+program_file="$HOME/.config/dynamic-hyprlive/program_list.conf"
+	#---	
+WALLPAPERdir=""
+DEFAULT_WALLPAPER=""
+DEFAULT_RGB=""
+DURATION="10s"
+ITERATION_LIMIT=5 #30 
+#-------------
+declare -A program_list=()
+while read line; do
+	if [[ ${line:0:1} == "#" ]]; then
+		continue
+	elif [ -z "$line" ]; then
+		continue
+	fi
+	temp="${line#*$'\t'}"
+	temp="${temp#*$'\t'}"
+	arrayWALLPAPER=$temp
+	#---
+	temp="${line%$'\t'*}"
+	temp="${temp%$'\t'*}"
+	arrayGAME=$temp
+	#---
+	temp="${line#*$'\t'}"
+	temp="${temp%$'\t'*}"
+	arrayRGB=$temp
+	#--- 
+	program_list[$arrayGAME]="$arrayRGB	$arrayWALLPAPER"
+done <$program_file
+#---- 
+current_wallpaper=""
+randomized=false
+while true; do 
+	wallpaper="$DEFAULT_WALLPAPER"
+	rgb="$DEFAULT_RGB"
+	#---
+	for program in "${!program_list[@]}"; do
+		process_quantity=$(ps aux | grep "$program" | wc -l)
+		if [[ $process_quantity != 1 ]]; then #GAME IS RUNNING
+			rgb=""${program_list[$program]%$'\t'*}"" #wallpaper=""${program_list[$program]%|*}""
+			wallpaper=""${program_list[$program]#*$'\t'}"" #rgb
+			read -a wallpaper_list <<< "$wallpaper"
+
+			if [[ $randomized == true && $program != $game ]]; then
+				randomized=false
+			fi
+
+			if [[ ${#wallpaper_list[@]} > 1 && $randomized == false ]]; then
+				random_wallpaper=${wallpaper_list[ $(( RANDOM % ${#wallpaper_list[@]} )) ]}
+				wallpaper=$random_wallpaper
+				game=$program
+				randomized=true
+				break
+			fi
+			if [[ $randomized == true && $program == $game ]]; then
+				wallpaper=$random_wallpaper
+				break
+			fi
+			#elif [[ $randomized == true && $program != $game ]]; then
+			#	randomized=false
+			#	break
+			#fi 
+			wallpaper=${wallpaper_list[0]}
+			break
+		fi
+	done
+	#---
+	if [[ $current_wallpaper != $wallpaper ]]; then	
+		pkill mpvpaper 
+		mpvpaper -o 'loop no-audio panscan=1' '*' "$WALLPAPERdir/$wallpaper" &
+		openrgb -p $rgb &
+		current_wallpaper=$wallpaper
+		iteration_count=0 
+	elif [[ $current_wallpaper == $wallpaper ]]; then 
+		((iteration_count+=1)) 
+		echo $iteration_count
+		if (( $iteration_count == $ITERATION_LIMIT )); then
+			pkill mpvpaper
+			mpvpaper -o 'loop no-audio panscan=1' '*' "$WALLPAPERdir/$wallpaper" &
+			iteration_count=0
+			randomized=false
+		fi
+	fi 
+	sleep $DURATION
+done 
