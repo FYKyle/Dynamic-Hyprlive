@@ -21,7 +21,7 @@ Configure associated programs, wallpapers, and rgb profiles within a text file n
 the provided config file contains and example its instructions on syntax
 
 ### Configuration syntax
-Note that between each item is a TAB(\t), HOWEVER if you want a variety of wallpapers for ONE game each wallpaper should be seperated by a SPACE after the initial first one
+Note that between each item is a TAB(\t), HOWEVER if you want a variety of wallpapers for ONE game/process each wallpaper should be separated by a SPACE after the initial first one
 You can also specify a subdirectory instead of multiple wallpapers by using the directory name followed by ".dir" (e.g. Zenless.dir)
 
 
