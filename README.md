@@ -7,15 +7,15 @@ Dynamic-Hyprlive is a bash program that reads if user-specified processes names 
 2. openrgb *_optional_
 
 ## Installation
-Download bash file, dynamic-hyprlivev#.sh
+Download bash file, ```dynamic-hyprlivev#.sh```
 
 
-Download program_list.conf
+Download config file, ```program_list.conf```
 
 ## Configuration 
 Configure associated programs, wallpapers, and rgb profiles within a text file named "program_list.conf" in 
 
-~/.config/dynamic-hyprlive/
+```~/.config/dynamic-hyprlive/```
 
 
 the provided config file contains and example its instructions on syntax
