@@ -1,6 +1,6 @@
 # Dynamic-Hyprlive
 
-Dynamic-Hyprlive is a bash program that reads if user-specified processes names are currently running via (ps aux | grep "process") and then using mpvpaper sets the corresponding wallpaper.
+Dynamic-Hyprlive is a bash program that reads if user-specified processes names are currently running via (ps aux | grep "process") and then using mpvpaper sets the corresponding wallpaper. It is named hyprlive because I wrote this program for use with Hyprland, but as the only dependency is mpvpaper, this script should work on other wlroots-based Wayland compositors.
 
 ## Dependencies
 1. mpvpaper
@@ -37,3 +37,14 @@ To set the default wallpaper(as in no programs are running), use "DEFAULT" as th
 
 
 If openrgb is not being used, type "n/a" as the openrgb profile name 
+
+
+*** Changes to configuration file are not recognized live so afterwards you must restart the dynamic-hyprlivev#.sh process 
+
+## Usage 
+run the bash file ```dynamic-hyprlivev#.sh```
+
+
+I recommend autostarting this file via desktop environment
+
+ex. Hyprland hyprland.conf ```exec-once path/to/file/dynamic-hyprlivev#.sh```
